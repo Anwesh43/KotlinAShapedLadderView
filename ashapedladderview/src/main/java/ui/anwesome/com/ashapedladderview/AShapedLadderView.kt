@@ -29,10 +29,10 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
         fun update (stopcb : (Float) -> Unit) {
             scale += 0.1f * dir
             if (Math.abs(scale - prevScale) > 1) {
-                prevScale = scale + dir
+                scale = prevScale + dir
                 dir = 0f
-                scale = prevScale
-                stopcb()
+                prevScale = scale
+                stopcb(scale)
             }
         }
 
@@ -69,6 +69,40 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
             if (animated) {
                 animated = false
             }
+        }
+    }
+
+    data class AShapedLadder (var i : Int, val state : State = State()) {
+
+        fun draw (canvas : Canvas, paint : Paint) {
+            val w = canvas.width.toFloat()
+            val h = canvas.height.toFloat()
+            val deg = 30f * state.scale
+            canvas.save()
+            canvas.translate(w/2, h/3)
+            for (i in 0..1) {
+                canvas.save()
+                canvas.rotate(deg * (1 - 2 * i))
+                canvas.drawLine(0f, 0f, 0f, w / 3, paint)
+                canvas.restore()
+            }
+            val gap : Float = w/(3 * 5)
+            var x : Float = gap
+            for (j in 0..3) {
+                val px = x * Math.sin(deg * Math.PI/180).toFloat() * (1 - 2 * i)
+                val py = x * Math.cos(deg * Math.PI/180).toFloat()
+                canvas.drawLine(-px, py, px, py, paint)
+                x += gap
+            }
+            canvas.restore()
+        }
+
+        fun update (stopcb : (Float) -> Unit) {
+            state.update(stopcb)
+        }
+
+        fun startUpdating (startcb : () -> Unit) {
+            state.startUpdating(startcb)
         }
     }
 }
