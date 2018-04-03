@@ -4,6 +4,7 @@ package ui.anwesome.com.ashapedladderview
  * Created by anweshmishra on 03/04/18.
  */
 
+import android.app.Activity
 import android.view.*
 import android.content.*
 import android.graphics.*
@@ -129,6 +130,14 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
             ladder.startUpdating {
                 animator.start()
             }
+        }
+    }
+
+    companion object {
+        fun create (activity : Activity) : AShapedLadderView {
+            val view = AShapedLadderView(activity)
+            activity.setContentView(view)
+            return view
         }
     }
 }
