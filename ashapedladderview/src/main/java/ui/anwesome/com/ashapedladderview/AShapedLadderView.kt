@@ -78,6 +78,7 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
             val w = canvas.width.toFloat()
             val h = canvas.height.toFloat()
             val deg = 30f * state.scale
+            paint.color = Color.parseColor("#27ae60")
             canvas.save()
             canvas.translate(w/2, h/3)
             for (i in 0..1) {
@@ -103,6 +104,29 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
 
         fun startUpdating (startcb : () -> Unit) {
             state.startUpdating(startcb)
+        }
+    }
+
+    data class Renderer (var view : AShapedLadderView) {
+
+        val animator : Animator = Animator(view)
+
+        val ladder : AShapedLadder = AShapedLadder(0)
+
+        fun render(canvas : Canvas, paint : Paint) {
+            canvas.drawColor(Color.parseColor("#212121"))
+            ladder.draw(canvas, paint)
+            animator.animate {
+                ladder.update {
+                    animator.stop()
+                }
+            }
+        }
+
+        fun handleTap() {
+            ladder.startUpdating {
+                animator.start()
+            }
         }
     }
 }
