@@ -80,17 +80,19 @@ class AShapedLadderView (ctx : Context) : View (ctx) {
         fun draw (canvas : Canvas, paint : Paint) {
             val w = canvas.width.toFloat()
             val h = canvas.height.toFloat()
-            val deg = 30f * state.scale
+            val deg = 20f * state.scale
             paint.color = Color.parseColor("#27ae60")
+            paint.strokeWidth = Math.min(w, h)/ 55
+            paint.strokeCap = Paint.Cap.ROUND
             canvas.save()
             canvas.translate(w/2, h/3)
             for (i in 0..1) {
                 canvas.save()
                 canvas.rotate(deg * (1 - 2 * i))
-                canvas.drawLine(0f, 0f, 0f, w / 3, paint)
+                canvas.drawLine(0f, 0f, 0f, w / 2, paint)
                 canvas.restore()
             }
-            val gap : Float = w/(3 * 5)
+            val gap : Float = w/(2 * 5)
             var x : Float = gap
             for (j in 0..3) {
                 val px = x * Math.sin(deg * Math.PI/180).toFloat() * (1 - 2 * i)
